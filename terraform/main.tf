@@ -3,8 +3,8 @@
 #===============================================================================
 
 resource "arvan_iaas_abrak" "abrak" {
-  region = var.region
-  flavor = var.flavor
+  region   = var.region
+  flavor   = var.flavor
   count    = 1
   name     = "${var.abrak_name}-${count.index}"
   ssh_key  = true
@@ -37,8 +37,14 @@ resource "terraform_data" "ansible" {
   depends_on = [arvan_iaas_abrak.abrak]
 
   provisioner "remote-exec" {
+    connection {
+      type = "ssh"
+      user = "ubuntu"
+      host = "188.121.106.205"
+      # password = ""
+    }
     inline = [
-      "ansible-playbook playbook.yml",
+      "echo 'hi terraform!' > /home/ubuntu/terra.txt"
     ]
   }
 }
